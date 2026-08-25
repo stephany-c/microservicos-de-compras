@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # -----------------------------------------------------
+  # 1. Banco de Dados do Monólito (O antigo)
+  # -----------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: shopflow-db
+    environment:
+      POSTGRES_USER: shopflow
+      POSTGRES_PASSWORD: shopflow_pass
+      POSTGRES_DB: shopflow_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # -----------------------------------------------------
+  # 2. Banco de Dados EXCLUSIVO do User Service
+  # -----------------------------------------------------
+  user-db:
+    image: postgres:16-alpine
+    container_name: shopflow-user-db
+    environment:
+      POSTGRES_USER: user_admin
+      POSTGRES_PASSWORD: user_pass
+      POSTGRES_DB: user_db
+    ports:
+      - "5433:5432" # <-- Atenção aqui! Ele vai rodar na porta 5433 do seu computador para não conflitar com o outro!
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # -----------------------------------------------------
+  # 3. Banco de Dados EXCLUSIVO do Product Service
+  # -----------------------------------------------------
+  product-db:
+    image: postgres:16-alpine
+    container_name: shopflow-product-db
+    environment:
+      POSTGRES_USER: product_admin
+      POSTGRES_PASSWORD: product_pass
+      POSTGRES_DB: product_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - product-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    # -----------------------------------------------------
+    # 3. Banco de Dados EXCLUSIVO do Order Service
+    # -----------------------------------------------------
+  order-db:
+    image: postgres:16-alpine
+    container_name: shopflow-order-db
+    environment:
+      POSTGRES_USER: order_admin
+      POSTGRES_PASSWORD: order_pass
+      POSTGRES_DB: order_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - order-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # -----------------------------------------------------
+  # 4. AWS Mock (LocalStack) para SNS/SQS
+  # -----------------------------------------------------
+  localstack:
+    image: localstack/localstack:3.4.0
+    container_name: shopflow-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sns,sqs
+      - AWS_DEFAULT_REGION=us-east-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
+    restart: unless-stopped
+
+  # -----------------------------------------------------
+  # 5. Banco de Dados EXCLUSIVO do Payment Service
+  # -----------------------------------------------------
+  payment-db:
+    image: postgres:16-alpine
+    container_name: shopflow-payment-db
+    environment:
+      POSTGRES_USER: payment_admin
+      POSTGRES_PASSWORD: payment_pass
+      POSTGRES_DB: payment_db
+    ports:
+      - "5436:5432"
+    volumes:
+      - payment-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # -----------------------------------------------------
+  # 6. Banco de Dados EXCLUSIVO do Cart Service
+  # -----------------------------------------------------
+  cart-db:
+    image: postgres:16-alpine
+    container_name: shopflow-cart-db
+    environment:
+      POSTGRES_USER: cart_admin
+      POSTGRES_PASSWORD: cart_pass
+      POSTGRES_DB: cart_db
+    ports:
+      - "5437:5432"
+    volumes:
+      - cart-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  user-db-data:
+  product-db-data:
+  order-db-data:
+  payment-db-data:
+  cart-db-data:

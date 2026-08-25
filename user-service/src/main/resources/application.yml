@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:postgresql://localhost:5433/user_db
+    username: user_admin
+    password: user_pass
+  jpa:
+    hibernate:
+      ddl-auto: validate
