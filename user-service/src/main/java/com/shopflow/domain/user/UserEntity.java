@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -20,10 +20,10 @@ public class User {
     private String password;
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public User() {
+    public UserEntity() {
     }
 
-    public User(String name, String email, String password) {
+    public UserEntity(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;

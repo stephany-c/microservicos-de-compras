@@ -28,7 +28,7 @@ public class AuthController {
     @PostMapping
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO data) {
         var user = this.repository.findByEmail(data.email())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("UserEntity not found"));
         
         if (passwordEncoder.matches(data.password(), user.getPassword())) {
             var token = tokenService.generateToken(user);

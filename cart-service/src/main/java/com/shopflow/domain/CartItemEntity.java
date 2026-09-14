@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "cart_items")
-public class CartItem {
+public class CartItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -15,7 +15,7 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     @JsonIgnore
-    private Cart cart;
+    private CartEntity cart;
 
     @Column(nullable = false)
     private UUID productId;
@@ -23,10 +23,10 @@ public class CartItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    public CartItem() {
+    public CartItemEntity() {
     }
 
-    public CartItem(Cart cart, UUID productId, Integer quantity) {
+    public CartItemEntity(CartEntity cart, UUID productId, Integer quantity) {
         this.cart = cart;
         this.productId = productId;
         this.quantity = quantity;
@@ -41,11 +41,11 @@ public class CartItem {
         this.id = id;
     }
 
-    public Cart getCart() {
+    public CartEntity getCart() {
         return cart;
     }
 
-    public void setCart(Cart cart) {
+    public void setCart(CartEntity cart) {
         this.cart = cart;
     }
 

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "carts")
-public class Cart {
+public class CartEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,12 +28,12 @@ public class Cart {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> items = new ArrayList<>();
+    private List<CartItemEntity> items = new ArrayList<>();
 
-    public Cart() {
+    public CartEntity() {
     }
 
-    public Cart(UUID userId) {
+    public CartEntity(UUID userId) {
         this.userId = userId;
         this.status = CartStatus.OPEN;
     }
@@ -82,20 +82,20 @@ public class Cart {
         return updatedAt;
     }
 
-    public List<CartItem> getItems() {
+    public List<CartItemEntity> getItems() {
         return items;
     }
 
-    public void setItems(List<CartItem> items) {
+    public void setItems(List<CartItemEntity> items) {
         this.items = items;
     }
 
-    public void addItem(CartItem item) {
+    public void addItem(CartItemEntity item) {
         items.add(item);
         item.setCart(this);
     }
 
-    public void removeItem(CartItem item) {
+    public void removeItem(CartItemEntity item) {
         items.remove(item);
         item.setCart(null);
     }

@@ -1,7 +1,8 @@
 package com.shopflow.domain.user;
 
-import org.springframework.stereotype.Service;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
@@ -11,15 +12,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-
-    public User createUser(User user) {
+    public UserEntity createUser(UserEntity user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email já cadastrado");
         }
         return this.userRepository.save(user);
     }
 
-    public User updateUser(java.util.UUID id, User user) {
+    public UserEntity updateUser(java.util.UUID id, UserEntity user) {
         return this.userRepository.findById(id)
                 .map(existingUser -> {
                     existingUser.setName(user.getName());
@@ -34,15 +34,15 @@ public class UserService {
         this.userRepository.deleteById(id);
     }
 
-    public User findByEmail(String email) {
+    public UserEntity findByEmail(String email) {
         return this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com o email: " + email));
     }
 
-    public List<User> getAllUsers() {
+    public List<UserEntity> getAllUsers() {
         return this.userRepository.findAll();
     }
-    public User getUserById(java.util.UUID id) {
+    public UserEntity getUserById(java.util.UUID id) {
         return this.userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com o ID: " + id));
     }

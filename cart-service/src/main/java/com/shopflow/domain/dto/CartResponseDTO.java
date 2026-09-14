@@ -1,7 +1,7 @@
 package com.shopflow.domain.dto;
 
-import com.shopflow.domain.Cart;
-import com.shopflow.domain.CartItem;
+import com.shopflow.domain.CartEntity;
+import com.shopflow.domain.CartItemEntity;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -12,7 +12,7 @@ public record CartResponseDTO(
     String status,
     List<CartItemResponseDTO> items
 ) {
-    public CartResponseDTO(Cart cart) {
+    public CartResponseDTO(CartEntity cart) {
         this(
             cart.getId(),
             cart.getUserId(),
@@ -26,7 +26,7 @@ record CartItemResponseDTO(
     UUID productId,
     Integer quantity
 ) {
-    public CartItemResponseDTO(CartItem item) {
+    public CartItemResponseDTO(CartItemEntity item) {
         this(item.getProductId(), item.getQuantity());
     }
 }

@@ -5,6 +5,6 @@ import java.util.UUID;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
-    Optional<User> findByEmail(String email);
+public interface UserRepository extends JpaRepository<UserEntity, UUID> {
+    Optional<UserEntity>findByEmail(String email);
 }

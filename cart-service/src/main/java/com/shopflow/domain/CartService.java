@@ -3,7 +3,7 @@ package com.shopflow.domain;
 import com.shopflow.domain.dto.CartItemRequestDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -18,23 +18,30 @@ public class CartService {
     }
 
     @Transactional
-    public Cart getOrCreateCart(UUID userId) {
+    public CartEntity getOrCreateCart(UUID userId) {
         return cartRepository.findByUserIdAndStatus(userId, CartStatus.OPEN)
-                .orElseGet(() -> cartRepository.save(new Cart(userId)));
+                .orElseGet(() -> cartRepository.save(new CartEntity(userId)));
     }
 
     @Transactional
-    public Cart addItemToCart(UUID userId, CartItemRequestDTO dto) {
-        Cart cart = getOrCreateCart(userId);
+    public CartEntity addItemToCart(UUID userId, CartItemRequestDTO dto) {
+        CartEntity cart = getOrCreateCart(userId);
 
-        Optional<CartItem> existingItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), dto.productId());
+        List<CartItemEntity> existingItems = cartItemRepository.findByCartIdAndProductId(cart.getId(), dto.productId());
 
-        if (existingItem.isPresent()) {
-            CartItem item = existingItem.get();
+        if (!existingItems.isEmpty()) {
+            CartItemEntity item = existingItems.get(0);
             item.setQuantity(item.getQuantity() + dto.quantity());
             cartItemRepository.save(item);
+            
+            if (existingItems.size() > 1) {
+                for (int i = 1; i < existingItems.size(); i++) {
+                    cart.removeItem(existingItems.get(i));
+                    cartItemRepository.delete(existingItems.get(i));
+                }
+            }
         } else {
-            CartItem newItem = new CartItem(cart, dto.productId(), dto.quantity());
+            CartItemEntity newItem = new CartItemEntity(cart, dto.productId(), dto.quantity());
             cart.addItem(newItem);
             cartItemRepository.save(newItem);
         }
@@ -43,15 +50,19 @@ public class CartService {
     }
 
     @Transactional
-    public Cart removeItemFromCart(UUID userId, UUID productId) {
-        Cart cart = cartRepository.findByUserIdAndStatus(userId, CartStatus.OPEN)
+    public CartEntity removeItemFromCart(UUID userId, UUID productId) {
+        CartEntity cart = cartRepository.findByUserIdAndStatus(userId, CartStatus.OPEN)
                 .orElseThrow(() -> new RuntimeException("Carrinho não encontrado para este usuário"));
 
-        CartItem item = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
-                .orElseThrow(() -> new RuntimeException("Item não encontrado no carrinho"));
+        List<CartItemEntity> items = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId);
+        if (items.isEmpty()) {
+            throw new RuntimeException("Item não encontrado no carrinho");
+        }
 
-        cart.removeItem(item);
-        cartItemRepository.delete(item);
+        for (CartItemEntity item : items) {
+            cart.removeItem(item);
+            cartItemRepository.delete(item);
+        }
 
         return cartRepository.save(cart);
     }

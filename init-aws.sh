@@ -14,4 +14,20 @@ aws --endpoint-url=http://localhost:4566 sns subscribe \
     --notification-endpoint arn:aws:sqs:us-east-1:000000000000:payment-queue \
     --region us-east-1
 
+# 4. Inventory Queue
+aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name inventory-queue --region us-east-1
+aws --endpoint-url=http://localhost:4566 sns subscribe \
+    --topic-arn arn:aws:sns:us-east-1:000000000000:order-created-topic \
+    --protocol sqs \
+    --notification-endpoint arn:aws:sqs:us-east-1:000000000000:inventory-queue \
+    --region us-east-1
+
+# 5. Notification Queue
+aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name notification-queue --region us-east-1
+aws --endpoint-url=http://localhost:4566 sns subscribe \
+    --topic-arn arn:aws:sns:us-east-1:000000000000:order-created-topic \
+    --protocol sqs \
+    --notification-endpoint arn:aws:sqs:us-east-1:000000000000:notification-queue \
+    --region us-east-1
+
 echo "SNS e SQS configurados com sucesso no LocalStack!"

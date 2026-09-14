@@ -20,7 +20,7 @@ public class CartController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<CartResponseDTO> getCart(@PathVariable UUID userId) {
-        Cart cart = cartService.getOrCreateCart(userId);
+        CartEntity cart = cartService.getOrCreateCart(userId);
         return ResponseEntity.ok(new CartResponseDTO(cart));
     }
 
@@ -28,7 +28,7 @@ public class CartController {
     public ResponseEntity<CartResponseDTO> addItem(
             @PathVariable UUID userId,
             @Valid @RequestBody CartItemRequestDTO dto) {
-        Cart cart = cartService.addItemToCart(userId, dto);
+        CartEntity cart = cartService.addItemToCart(userId, dto);
         return ResponseEntity.ok(new CartResponseDTO(cart));
     }
 
@@ -36,7 +36,7 @@ public class CartController {
     public ResponseEntity<CartResponseDTO> removeItem(
             @PathVariable UUID userId,
             @PathVariable UUID productId) {
-        Cart cart = cartService.removeItemFromCart(userId, productId);
+        CartEntity cart = cartService.removeItemFromCart(userId, productId);
         return ResponseEntity.ok(new CartResponseDTO(cart));
     }
 }

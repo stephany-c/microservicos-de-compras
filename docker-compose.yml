@@ -2,23 +2,7 @@ version: '3.8'
 
 services:
   # -----------------------------------------------------
-  # 1. Banco de Dados do Monólito (O antigo)
-  # -----------------------------------------------------
-  postgres:
-    image: postgres:16-alpine
-    container_name: shopflow-db
-    environment:
-      POSTGRES_USER: shopflow
-      POSTGRES_PASSWORD: shopflow_pass
-      POSTGRES_DB: shopflow_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    restart: unless-stopped
-
-  # -----------------------------------------------------
-  # 2. Banco de Dados EXCLUSIVO do User Service
+  #  Banco de Dados do User Service
   # -----------------------------------------------------
   user-db:
     image: postgres:16-alpine
@@ -28,28 +12,27 @@ services:
       POSTGRES_PASSWORD: user_pass
       POSTGRES_DB: user_db
     ports:
-      - "5433:5432" # <-- Atenção aqui! Ele vai rodar na porta 5433 do seu computador para não conflitar com o outro!
+      - "5433:5432"
     volumes:
       - user-db-data:/var/lib/postgresql/data
     restart: unless-stopped
 
   # -----------------------------------------------------
-  # 3. Banco de Dados EXCLUSIVO do Product Service
+  #  Banco de Dados do Product Service (MongoDB)
   # -----------------------------------------------------
-  product-db:
-    image: postgres:16-alpine
-    container_name: shopflow-product-db
+  product-mongodb:
+    image: mongo:7.0
+    container_name: shopflow-product-mongodb
     environment:
-      POSTGRES_USER: product_admin
-      POSTGRES_PASSWORD: product_pass
-      POSTGRES_DB: product_db
+      MONGO_INITDB_ROOT_USERNAME: product_admin
+      MONGO_INITDB_ROOT_PASSWORD: product_pass
     ports:
-      - "5434:5432"
+      - "27017:27017"
     volumes:
-      - product-db-data:/var/lib/postgresql/data
+      - product-mongodb-data:/data/db
     restart: unless-stopped
     # -----------------------------------------------------
-    # 3. Banco de Dados EXCLUSIVO do Order Service
+    # Banco de Dados do Order Service
     # -----------------------------------------------------
   order-db:
     image: postgres:16-alpine
@@ -65,7 +48,7 @@ services:
     restart: unless-stopped
 
   # -----------------------------------------------------
-  # 4. AWS Mock (LocalStack) para SNS/SQS
+  # AWS Mock (LocalStack) para SNS/SQS
   # -----------------------------------------------------
   localstack:
     image: localstack/localstack:3.4.0
@@ -82,7 +65,7 @@ services:
     restart: unless-stopped
 
   # -----------------------------------------------------
-  # 5. Banco de Dados EXCLUSIVO do Payment Service
+  # Banco de Dados do Payment Service
   # -----------------------------------------------------
   payment-db:
     image: postgres:16-alpine
@@ -98,7 +81,7 @@ services:
     restart: unless-stopped
 
   # -----------------------------------------------------
-  # 6. Banco de Dados EXCLUSIVO do Cart Service
+  # Banco de Dados do Cart Service
   # -----------------------------------------------------
   cart-db:
     image: postgres:16-alpine
@@ -113,10 +96,54 @@ services:
       - cart-db-data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  # -----------------------------------------------------
+  # Banco de Dados do Inventory Service
+  # -----------------------------------------------------
+  inventory-db:
+    image: postgres:16-alpine
+    container_name: shopflow-inventory-db
+    environment:
+      POSTGRES_USER: inventory_admin
+      POSTGRES_PASSWORD: inventory_pass
+      POSTGRES_DB: inventory_db
+    ports:
+      - "5438:5432"
+    volumes:
+      - inventory-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # -----------------------------------------------------
+  # Banco de Dados do Notification Service
+  # -----------------------------------------------------
+  notification-db:
+    image: postgres:16-alpine
+    container_name: shopflow-notification-db
+    environment:
+      POSTGRES_USER: notification_admin
+      POSTGRES_PASSWORD: notification_pass
+      POSTGRES_DB: notification_db
+    ports:
+      - "5439:5432"
+    volumes:
+      - notification-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # -----------------------------------------------------
+  # Redis Cache (Product Service)
+  # -----------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: shopflow-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
 volumes:
   postgres-data:
   user-db-data:
-  product-db-data:
+  product-mongodb-data:
   order-db-data:
   payment-db-data:
   cart-db-data:
+  inventory-db-data:
+  notification-db-data:

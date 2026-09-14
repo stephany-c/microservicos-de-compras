@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"name": "ecomerce-shopflow",
+			"path": "."
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic"
+	}
+}
