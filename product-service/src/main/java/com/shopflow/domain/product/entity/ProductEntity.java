@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import com.shopflow.domain.category.entity.CategoryEntity;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,13 +23,11 @@ public class ProductEntity {
 
     @Id
     private String id;
-
     private String name;
 
     private String description;
 
-    @DBRef
-    private CategoryEntity category;
+
 
     private ProductStatus status;
 
@@ -39,6 +37,6 @@ public class ProductEntity {
 
     // Flexible Schema support
     private String type;
-    
+
     private Map<String, Object> specifications;
 }

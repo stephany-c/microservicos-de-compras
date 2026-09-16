@@ -22,3 +22,5 @@ spring:
         static: us-east-1
       sqs:
         endpoint: http://localhost:4566
+      dynamodb:
+        endpoint: http://localhost:4566

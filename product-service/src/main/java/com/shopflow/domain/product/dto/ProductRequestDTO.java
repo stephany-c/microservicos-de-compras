@@ -18,8 +18,7 @@ public class ProductRequestDTO {
 
     private String description;
 
-    @NotNull(message = "O ID da categoria é obrigatório")
-    private String categoryId;
+
 
     @NotNull(message = "O status do produto é obrigatório")
     private com.shopflow.domain.product.entity.ProductStatus status;

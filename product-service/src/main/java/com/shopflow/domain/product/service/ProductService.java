@@ -1,7 +1,6 @@
 package com.shopflow.domain.product.service;
 
-import com.shopflow.domain.category.entity.CategoryEntity;
-import com.shopflow.domain.category.repository.CategoryRepository;
+
 import com.shopflow.domain.product.dto.ProductRequestDTO;
 import com.shopflow.domain.product.dto.ProductResponseDTO;
 import com.shopflow.domain.product.entity.ProductEntity;
@@ -25,8 +24,7 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+
 
     @Autowired
     private ProductEventPublisher eventPublisher;
@@ -48,13 +46,9 @@ public class ProductService {
 
     @CacheEvict(value = {"products", "product"}, allEntries = true)
     public ProductResponseDTO createProduct(ProductRequestDTO requestDTO) {
-        CategoryEntity category = categoryRepository.findById(requestDTO.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("CategoryEntity not found with id: " + requestDTO.getCategoryId()));
-
         ProductEntity product = ProductEntity.builder()
                 .name(requestDTO.getName())
                 .description(requestDTO.getDescription())
-                .category(category)
                 .status(requestDTO.getStatus())
                 .preco(requestDTO.getPreco())
                 .quantidade(requestDTO.getQuantidade())
@@ -78,12 +72,8 @@ public class ProductService {
         ProductEntity existingProduct = repository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("ProductEntity not found with id: " + id));
 
-        CategoryEntity category = categoryRepository.findById(requestDTO.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("CategoryEntity not found with id: " + requestDTO.getCategoryId()));
-                
         existingProduct.setName(requestDTO.getName());
         existingProduct.setDescription(requestDTO.getDescription());
-        existingProduct.setCategory(category);
         existingProduct.setStatus(requestDTO.getStatus());
         existingProduct.setPreco(requestDTO.getPreco());
         existingProduct.setQuantidade(requestDTO.getQuantidade());

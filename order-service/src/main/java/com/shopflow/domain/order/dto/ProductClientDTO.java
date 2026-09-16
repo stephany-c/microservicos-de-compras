@@ -4,7 +4,7 @@ import java.util.UUID;
 import java.math.BigDecimal;
 
 public record ProductClientDTO(
-    UUID id,
+    String id,
     String name,
     BigDecimal preco
 ) {}

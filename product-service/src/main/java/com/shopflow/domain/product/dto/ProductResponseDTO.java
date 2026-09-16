@@ -14,7 +14,7 @@ public class ProductResponseDTO implements java.io.Serializable {
     private String id;
     private String name;
     private String description;
-    private String categoryName;
+
     private com.shopflow.domain.product.entity.ProductStatus status;
     private BigDecimal preco;
     private Integer quantidade;
@@ -25,7 +25,7 @@ public class ProductResponseDTO implements java.io.Serializable {
         this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
-        this.categoryName = product.getCategory() != null ? product.getCategory().getName() : null;
+
         this.status = product.getStatus();
         this.preco = product.getPreco();
         this.quantidade = product.getQuantidade();

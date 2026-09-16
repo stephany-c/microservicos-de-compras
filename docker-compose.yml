@@ -56,7 +56,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=sns,sqs
+      - SERVICES=sns,sqs,dynamodb
       - AWS_DEFAULT_REGION=us-east-1
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:

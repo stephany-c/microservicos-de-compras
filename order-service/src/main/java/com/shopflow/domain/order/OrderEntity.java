@@ -15,14 +15,14 @@ public class OrderEntity {
     private UUID userId;
 
     @Column(name = "product_id", nullable = false)
-    private UUID productId;
+    private String productId;
 
     @Column(nullable = false)
     private String status;
 
     public OrderEntity() {}
 
-    public OrderEntity(UUID userId, UUID productId, String status) {
+    public OrderEntity(UUID userId, String productId, String status) {
         this.userId = userId;
         this.productId = productId;
         this.status = status;
@@ -40,10 +40,10 @@ public class OrderEntity {
     public void setUserId(UUID userId) {
          this.userId = userId; }
 
-    public UUID getProductId() {
+    public String getProductId() {
          return productId; }
 
-    public void setProductId(UUID productId) {
+    public void setProductId(String productId) {
          this.productId = productId; }
 
     public String getStatus() {
