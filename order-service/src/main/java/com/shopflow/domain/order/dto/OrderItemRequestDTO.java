@@ -1,8 +1,9 @@
 package com.shopflow.domain.order.dto;
 
-import java.util.UUID;
+import jakarta.validation.constraints.NotNull;
 
 public record OrderItemRequestDTO(
-    UUID productId,
+    @NotNull(message = "O ID do produto é obrigatório")
+    String productId,
     Integer quantity
 ) {}

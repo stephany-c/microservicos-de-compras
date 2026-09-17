@@ -3,6 +3,7 @@ package com.shopflow.domain.order.service;
 import com.shopflow.domain.order.OrderEntity;
 import com.shopflow.domain.order.OrderRepository;
 import com.shopflow.domain.order.dto.OrderRequestDTO;
+import com.shopflow.domain.order.dto.OrderCreatedEventDTO;
 import com.shopflow.domain.order.dto.OrderResponseDTO;
 import com.shopflow.domain.order.dto.PaymentRequestDTO;
 import com.shopflow.domain.order.dto.ProductClientDTO;
@@ -59,9 +60,9 @@ public class OrderService {
         OrderEntity savedOrder = repository.save(order);
 
         // 3. Process payment via SNS Event
-        PaymentRequestDTO paymentRequest = new PaymentRequestDTO(savedOrder.getId(), product.preco());
+        OrderCreatedEventDTO event = new OrderCreatedEventDTO(savedOrder.getId(), savedOrder.getProductId(), product.preco());
         try {
-            snsTemplate.convertAndSend(SNS_TOPIC_ARN, paymentRequest);
+            snsTemplate.convertAndSend(SNS_TOPIC_ARN, event);
         } catch (Exception e) {
             savedOrder.setStatus("FAILED");
             repository.save(savedOrder);

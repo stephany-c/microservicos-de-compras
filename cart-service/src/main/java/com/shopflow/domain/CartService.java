@@ -50,7 +50,7 @@ public class CartService {
     }
 
     @Transactional
-    public CartEntity removeItemFromCart(UUID userId, UUID productId) {
+    public CartEntity removeItemFromCart(UUID userId, String productId) {
         CartEntity cart = cartRepository.findByUserIdAndStatus(userId, CartStatus.OPEN)
                 .orElseThrow(() -> new RuntimeException("Carrinho não encontrado para este usuário"));
 

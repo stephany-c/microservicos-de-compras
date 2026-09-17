@@ -16,31 +16,31 @@ public class PaymentListener {
     private ProcessedEventRepository processedEventRepository;
 
     @SqsListener("payment-queue")
-    public void processPaymentEvent(PaymentRequestDTO dto) {
-        String eventId = "payment-order-" + dto.orderId();
+    public void processPaymentEvent(OrderCreatedEventDTO event) {
+        String eventId = "payment-order-" + event.orderId();
         
         // 1. Checa a Idempotência no DynamoDB
         if (processedEventRepository.existsById(eventId)) {
-            System.out.println("Evento já processado anteriormente. Ignorando pedido: " + dto.orderId());
+            System.out.println("Evento já processado anteriormente. Ignorando pedido: " + event.orderId());
             return;
         }
 
-        System.out.println("Recebido evento de pagamento via SQS para o pedido: " + dto.orderId() + " no valor de " + dto.amount());
+        System.out.println("Recebido evento de pagamento via SQS para o pedido: " + event.orderId() + " no valor de " + event.amount());
         
         try {
             // Simula tempo de processamento de pagamento
             Thread.sleep(2000);
             
             String status = "FAILED";
-            if (dto.amount() != null && dto.amount() > 0) {
-                System.out.println("Pagamento APROVADO para o pedido: " + dto.orderId());
+            if (event.amount() != null && event.amount().compareTo(java.math.BigDecimal.ZERO) > 0) {
+                System.out.println("Pagamento APROVADO para o pedido: " + event.orderId());
                 status = "PAID";
             } else {
-                System.out.println("Pagamento RECUSADO (valor inválido) para o pedido: " + dto.orderId());
+                System.out.println("Pagamento RECUSADO (valor inválido) para o pedido: " + event.orderId());
             }
             
             // Notifica o order-service (Simulando Webhook para não complicar a Fase 5)
-            String orderUrl = "http://localhost:8082/orders/" + dto.orderId() + "/status?status=" + status;
+            String orderUrl = "http://localhost:8082/orders/" + event.orderId() + "/status?status=" + status;
             restTemplate.put(orderUrl, null);
             
             // 2. Salva o evento como processado no DynamoDB

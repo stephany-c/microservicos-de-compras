@@ -16,6 +16,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: jdbc:postgresql://localhost:5438/inventory_db
+    user: inventory_admin
+    password: inventory_pass
 
   cloud:
     aws:

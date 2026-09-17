@@ -9,7 +9,7 @@ CREATE TABLE carts (
 CREATE TABLE cart_items (
     id UUID PRIMARY KEY,
     cart_id UUID NOT NULL REFERENCES carts(id) ON DELETE CASCADE,
-    product_id UUID NOT NULL,
+    product_id VARCHAR(255) NOT NULL,
     quantity INTEGER NOT NULL CHECK (quantity > 0)
 );
 

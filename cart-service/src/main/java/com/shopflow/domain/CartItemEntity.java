@@ -18,7 +18,7 @@ public class CartItemEntity {
     private CartEntity cart;
 
     @Column(nullable = false)
-    private UUID productId;
+    private String productId;
 
     @Column(nullable = false)
     private Integer quantity;
@@ -26,7 +26,7 @@ public class CartItemEntity {
     public CartItemEntity() {
     }
 
-    public CartItemEntity(CartEntity cart, UUID productId, Integer quantity) {
+    public CartItemEntity(CartEntity cart, String productId, Integer quantity) {
         this.cart = cart;
         this.productId = productId;
         this.quantity = quantity;
@@ -49,11 +49,11 @@ public class CartItemEntity {
         this.cart = cart;
     }
 
-    public UUID getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(UUID productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 

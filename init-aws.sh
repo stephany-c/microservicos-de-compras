@@ -12,6 +12,7 @@ aws --endpoint-url=http://localhost:4566 sns subscribe \
     --topic-arn arn:aws:sns:us-east-1:000000000000:order-created-topic \
     --protocol sqs \
     --notification-endpoint arn:aws:sqs:us-east-1:000000000000:payment-queue \
+    --attributes RawMessageDelivery=true \
     --region us-east-1
 
 # 4. Inventory Queue
@@ -20,6 +21,7 @@ aws --endpoint-url=http://localhost:4566 sns subscribe \
     --topic-arn arn:aws:sns:us-east-1:000000000000:order-created-topic \
     --protocol sqs \
     --notification-endpoint arn:aws:sqs:us-east-1:000000000000:inventory-queue \
+    --attributes RawMessageDelivery=true \
     --region us-east-1
 
 # 5. Notification Queue

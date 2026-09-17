@@ -23,7 +23,7 @@ public record CartResponseDTO(
 }
 
 record CartItemResponseDTO(
-    UUID productId,
+    String productId,
     Integer quantity
 ) {
     public CartItemResponseDTO(CartItemEntity item) {

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record CartItemRequestDTO(
     @NotNull(message = "O ID do produto é obrigatório")
-    UUID productId,
+    String productId,
 
     @NotNull(message = "A quantidade é obrigatória")
     @Positive(message = "A quantidade deve ser maior que zero")
