@@ -56,7 +56,7 @@ public class ProductService {
                 .specifications(requestDTO.getSpecifications())
                 .build();
         ProductEntity savedProduct = repository.save(product);
-        eventPublisher.publishProductCreatedEvent(savedProduct.getId());
+        eventPublisher.publishProductCreatedEvent(savedProduct.getId(), savedProduct.getQuantidade());
         return new ProductResponseDTO(savedProduct);
     }
 

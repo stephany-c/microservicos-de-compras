@@ -24,6 +24,12 @@ spring:
     user: inventory_admin
     password: inventory_pass
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: inventory-group
+      auto-offset-reset: earliest
+
   cloud:
     aws:
       region:

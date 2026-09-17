@@ -13,8 +13,8 @@ public class ProductEventPublisher {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void publishProductCreatedEvent(String productId) {
-        String message = String.format("{\"eventType\": \"PRODUCT_CREATED\", \"productId\": \"%s\"}", productId);
+    public void publishProductCreatedEvent(String productId, Integer quantity) {
+        String message = String.format("{\"eventType\": \"PRODUCT_CREATED\", \"productId\": \"%s\", \"quantity\": %d}", productId, quantity);
         System.out.println("[KAFKA] Publicando evento: " + message);
         kafkaTemplate.send(TOPIC_PRODUCT_EVENTS, productId, message);
     }
